@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.harlon.drugmanagement.dao.SysObjectDao">
+
+    <resultMap type="com.harlon.drugmanagement.entity.SysObject" id="SysObjectMap">
+        <result property="id" column="id" jdbcType="INTEGER"/>
+        <result property="kindId" column="kind_id" jdbcType="INTEGER"/>
+        <result property="kindNickname" column="kind_nickname" jdbcType="VARCHAR"/>
+        <result property="kindProductDate" column="kind_product_date" jdbcType="TIMESTAMP"/>
+        <result property="kindValidatePeriod" column="kind_validate_period" jdbcType="TIMESTAMP"/>
+        <result property="reminderDate" column="reminder_date" jdbcType="TIMESTAMP"/>
+        <result property="imgPath" column="img_path" jdbcType="VARCHAR"/>
+        <result property="storedLocation" column="stored_location" jdbcType="VARCHAR"/>
+        <result property="createDate" column="create_date" jdbcType="TIMESTAMP"/>
+        <result property="updateDate" column="update_date" jdbcType="TIMESTAMP"/>
+        <result property="operator" column="operator" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="SysObjectMap">
+        select
+          id, kind_id, kind_nickname, kind_product_date, kind_validate_period, reminder_date, img_path, stored_location, create_date, update_date, operator
+        from sys_object
+        where id = #{id}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="SysObjectMap">
+        select
+          id, kind_id, kind_nickname, kind_product_date, kind_validate_period, reminder_date, img_path, stored_location, create_date, update_date, operator
+        from sys_object
+        <where>
+            <if test="id != null">
+                and id = #{id}
+            </if>
+            <if test="kindId != null">
+                and kind_id = #{kindId}
+            </if>
+            <if test="kindNickname != null and kindNickname != ''">
+                and kind_nickname = #{kindNickname}
+            </if>
+            <if test="kindProductDate != null">
+                and kind_product_date = #{kindProductDate}
+            </if>
+            <if test="kindValidatePeriod != null">
+                and kind_validate_period = #{kindValidatePeriod}
+            </if>
+            <if test="reminderDate != null">
+                and reminder_date = #{reminderDate}
+            </if>
+            <if test="imgPath != null and imgPath != ''">
+                and img_path = #{imgPath}
+            </if>
+            <if test="storedLocation != null and storedLocation != ''">
+                and stored_location = #{storedLocation}
+            </if>
+            <if test="createDate != null">
+                and create_date = #{createDate}
+            </if>
+            <if test="updateDate != null">
+                and update_date = #{updateDate}
+            </if>
+            <if test="operator != null">
+                and operator = #{operator}
+            </if>
+        </where>
+        limit #{pageable.offset}, #{pageable.pageSize}
+    </select>
+
+    <!--统计总行数-->
+    <select id="count" resultType="java.lang.Long">
+        select count(1)
+        from sys_object
+        <where>
+            <if test="id != null">
+                and id = #{id}
+            </if>
+            <if test="kindId != null">
+                and kind_id = #{kindId}
+            </if>
+            <if test="kindNickname != null and kindNickname != ''">
+                and kind_nickname = #{kindNickname}
+            </if>
+            <if test="kindProductDate != null">
+                and kind_product_date = #{kindProductDate}
+            </if>
+            <if test="kindValidatePeriod != null">
+                and kind_validate_period = #{kindValidatePeriod}
+            </if>
+            <if test="reminderDate != null">
+                and reminder_date = #{reminderDate}
+            </if>
+            <if test="imgPath != null and imgPath != ''">
+                and img_path = #{imgPath}
+            </if>
+            <if test="storedLocation != null and storedLocation != ''">
+                and stored_location = #{storedLocation}
+            </if>
+            <if test="createDate != null">
+                and create_date = #{createDate}
+            </if>
+            <if test="updateDate != null">
+                and update_date = #{updateDate}
+            </if>
+            <if test="operator != null">
+                and operator = #{operator}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="id" useGeneratedKeys="true">
+        insert into sys_object(kind_id, kind_nickname, kind_product_date, kind_validate_period, reminder_date, img_path, stored_location, create_date, update_date, operator)
+        values (#{kindId}, #{kindNickname}, #{kindProductDate}, #{kindValidatePeriod}, #{reminderDate}, #{imgPath}, #{storedLocation}, #{createDate}, #{updateDate}, #{operator})
+    </insert>
+
+    <insert id="insertBatch" keyProperty="id" useGeneratedKeys="true">
+        insert into sys_object(kind_id, kind_nickname, kind_product_date, kind_validate_period, reminder_date, img_path, stored_location, create_date, update_date, operator)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+        (#{entity.kindId}, #{entity.kindNickname}, #{entity.kindProductDate}, #{entity.kindValidatePeriod}, #{entity.reminderDate}, #{entity.imgPath}, #{entity.storedLocation}, #{entity.createDate}, #{entity.updateDate}, #{entity.operator})
+        </foreach>
+    </insert>
+
+    <insert id="insertOrUpdateBatch" keyProperty="id" useGeneratedKeys="true">
+        insert into sys_object(kind_id, kind_nickname, kind_product_date, kind_validate_period, reminder_date, img_path, stored_location, create_date, update_date, operator)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.kindId}, #{entity.kindNickname}, #{entity.kindProductDate}, #{entity.kindValidatePeriod}, #{entity.reminderDate}, #{entity.imgPath}, #{entity.storedLocation}, #{entity.createDate}, #{entity.updateDate}, #{entity.operator})
+        </foreach>
+        on duplicate key update
+        kind_id = values(kind_id),
+        kind_nickname = values(kind_nickname),
+        kind_product_date = values(kind_product_date),
+        kind_validate_period = values(kind_validate_period),
+        reminder_date = values(reminder_date),
+        img_path = values(img_path),
+        stored_location = values(stored_location),
+        create_date = values(create_date),
+        update_date = values(update_date),
+        operator = values(operator)
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update sys_object
+        <set>
+            <if test="kindId != null">
+                kind_id = #{kindId},
+            </if>
+            <if test="kindNickname != null and kindNickname != ''">
+                kind_nickname = #{kindNickname},
+            </if>
+            <if test="kindProductDate != null">
+                kind_product_date = #{kindProductDate},
+            </if>
+            <if test="kindValidatePeriod != null">
+                kind_validate_period = #{kindValidatePeriod},
+            </if>
+            <if test="reminderDate != null">
+                reminder_date = #{reminderDate},
+            </if>
+            <if test="imgPath != null and imgPath != ''">
+                img_path = #{imgPath},
+            </if>
+            <if test="storedLocation != null and storedLocation != ''">
+                stored_location = #{storedLocation},
+            </if>
+            <if test="createDate != null">
+                create_date = #{createDate},
+            </if>
+            <if test="updateDate != null">
+                update_date = #{updateDate},
+            </if>
+            <if test="operator != null">
+                operator = #{operator},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete from sys_object where id = #{id}
+    </delete>
+
+</mapper>
+

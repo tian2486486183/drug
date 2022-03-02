@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.harlon.drugmanagement.dao.SysObjectKindDao">
+
+    <resultMap type="com.harlon.drugmanagement.entity.SysObjectKind" id="SysObjectKindMap">
+        <result property="id" column="id" jdbcType="INTEGER"/>
+        <result property="kindId" column="kind_id" jdbcType="INTEGER"/>
+        <result property="kindName" column="kind_name" jdbcType="VARCHAR"/>
+        <result property="operateor" column="operateor" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="SysObjectKindMap">
+        select
+          id, kind_id, kind_name, operateor
+        from sys_object_kind
+        where id = #{id}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="SysObjectKindMap">
+        select
+          id, kind_id, kind_name, operateor
+        from sys_object_kind
+        <where>
+            <if test="id != null">
+                and id = #{id}
+            </if>
+            <if test="kindId != null">
+                and kind_id = #{kindId}
+            </if>
+            <if test="kindName != null and kindName != ''">
+                and kind_name = #{kindName}
+            </if>
+            <if test="operateor != null">
+                and operateor = #{operateor}
+            </if>
+        </where>
+        limit #{pageable.offset}, #{pageable.pageSize}
+    </select>
+
+    <!--统计总行数-->
+    <select id="count" resultType="java.lang.Long">
+        select count(1)
+        from sys_object_kind
+        <where>
+            <if test="id != null">
+                and id = #{id}
+            </if>
+            <if test="kindId != null">
+                and kind_id = #{kindId}
+            </if>
+            <if test="kindName != null and kindName != ''">
+                and kind_name = #{kindName}
+            </if>
+            <if test="operateor != null">
+                and operateor = #{operateor}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="id" useGeneratedKeys="true">
+        insert into sys_object_kind(kind_id, kind_name, operateor)
+        values (#{kindId}, #{kindName}, #{operateor})
+    </insert>
+
+    <insert id="insertBatch" keyProperty="id" useGeneratedKeys="true">
+        insert into sys_object_kind(kind_id, kind_name, operateor)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+        (#{entity.kindId}, #{entity.kindName}, #{entity.operateor})
+        </foreach>
+    </insert>
+
+    <insert id="insertOrUpdateBatch" keyProperty="id" useGeneratedKeys="true">
+        insert into sys_object_kind(kind_id, kind_name, operateor)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.kindId}, #{entity.kindName}, #{entity.operateor})
+        </foreach>
+        on duplicate key update
+        kind_id = values(kind_id),
+        kind_name = values(kind_name),
+        operateor = values(operateor)
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update sys_object_kind
+        <set>
+            <if test="kindId != null">
+                kind_id = #{kindId},
+            </if>
+            <if test="kindName != null and kindName != ''">
+                kind_name = #{kindName},
+            </if>
+            <if test="operateor != null">
+                operateor = #{operateor},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete from sys_object_kind where id = #{id}
+    </delete>
+
+</mapper>
+

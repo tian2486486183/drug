@@ -1,0 +1,10 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>小浣熊</title>
+</head>
+<body>
+<p>小浣熊通过邮件发来了验证码<span style="color: deeppink;" th:text="${verificationCode}"></span>,有效期<span style="color: springgreen" th:text="${min}"></span>分钟,打死也不要告诉别人哦！</p>
+</body>
+</html>
